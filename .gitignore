@@ -1,0 +1,27 @@
+# LaTeX build output
+build/
+*.aux
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# EPS figures converted at build time; regenerate with ./make-figures.sh
+*-eps-converted-to.pdf
+
+# Editor leftovers
+*~
+*.swp
+.*.swp
+.DS_Store
+
+# Windows alternate-data-stream artifacts
+*:Zone.Identifier
+
+# Local working instructions, not part of the manual
+CLAUDE.md

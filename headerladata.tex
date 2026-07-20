@@ -1,0 +1,422 @@
+%%%%%%%%%%%%%%%%%%%%
+% AUTHOR AND HEADER
+% define \nbook
+%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\ifx \nauthor\undefined
+	\def\nauthor{David A. Lee}
+\else
+\fi
+
+\author{\nbook \\ \small Gilbert Strang \\ \small Solutions by \nauthor}
+\date{}
+
+%%%%%%%%%%%%%%%%%%%%
+% PACKAGES
+%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{alltt} 
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{centernot}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+% Figures live in i1/, i3/, i5/, i7/ at the project root, while the documents
+% sit one level below. Listing both "./" and "../" lets the existing
+% \includegraphics{i1/...} paths resolve from either location.
+\graphicspath{{./}{../}}
+\usepackage{mathdots}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{multirow}
+\usepackage{pdflscape}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{siunitx}
+\usepackage{slashed}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{titletoc}
+\usepackage{tkz-euclide}
+\usepackage[normalem]{ulem}
+\usepackage{url}
+\usepackage[all]{xy}
+\usepackage{imakeidx}
+
+% fonts
+% use \textsf to change to Computer Modern Bright
+\renewcommand{\sfdefault}{cmbr} % keeps default font Computer Modern Roman
+
+% makeindex for table of contents
+\makeindex[intoc, title=Index]
+\indexsetup{othercode={\lhead{ Index }}}
+
+% table of contents remove numbering
+\usepackage{tocloft} % for coloring subsections -- note that sections have standard document hyperlink coloring, i.e. color = doc
+\setcounter{secnumdepth}{0} % remove numbering
+\renewcommand{\cftsubsecfont}{\hypersetup{linkcolor=subsect!90}} % subsection coloring
+\renewcommand{\contentsname}{\textsf{Table of Contents}}
+
+% pagestyle
+\pagestyle{fancyplain}
+
+% header
+\lhead{	\nouppercase{\leftmark} }
+\ifx \nextra \undefined
+  \rhead{
+    \ifnum\thepage=1
+    \else
+      \nbookshort \  | \nauthor
+    \fi}
+\else
+  \rhead{
+    \ifnum\thepage=1
+    \else
+      \nbookshort (\nextra)
+    \fi}
+\fi
+
+% proof environment
+
+\newcommand{\prooffont}{\scshape}
+\usepackage{xpatch}
+\tracingpatches
+\xpatchcmd{\proof}{\itshape}{\prooffont}{}{}
+
+% Python environment (for typesetting Python code)
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{8} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{8}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+morekeywords={self},              % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false
+}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+%%%%%%%%%%%%%
+% FUNCTIONS %
+%%%%%%%%%%%%%
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+%%%%%%%%%%%%%%%%%%%%
+% DOCUMENT GEOMETRY
+%%%%%%%%%%%%%%%%%%%%
+
+\ifx \ntrim \undefined
+\else
+  \usepackage{geometry}
+  \geometry{
+	  papersize={379pt, 699pt},
+	  textwidth=345pt,
+	  left=17pt,
+	  top=54pt,
+	  right=17pt,
+  }
+\fi
+
+% maketitle statement
+\title{}
+\ifx \nisofficial \undefined
+\let\@real@maketitle\maketitle
+\renewcommand{\maketitle}{\@real@maketitle\begin{center}\begin{minipage}[c]{0.9\textwidth}\centering\footnotesize All errors, typographical and substantive, and other offenses, are entirely my own.\end{minipage}\end{center}}
+\else
+\fi
+
+%%%%%%%%%%%%%%%%%%%%
+% THEOREMS
+%%%%%%%%%%%%%%%%%%%%
+
+%\theoremstyle{definition}
+\newtheorem*{axiom}{Axiom}
+\newtheorem*{claim}{Claim}
+\newtheorem*{conjecture}{Conjecture}
+\newtheorem*{cor}{Corollary}
+%\newtheorem*{dfn}{Definition}
+\newtheorem*{eg}{Example}
+\newtheorem*{ex}{Exercise}
+%\newtheorem*{lemma}{Lemma}
+\newtheorem*{prop}{Proposition}
+%\newtheorem*{thm}{Theorem}
+\newtheorem*{remark}{Remark}
+\newtheorem*{warning}{Warning}
+
+%%%%%%%%%%%%%%%%%%%%
+% FORMATTING AESTHETICS
+%%%%%%%%%%%%%%%%%%%%
+
+% itemize bullets
+\renewcommand{\labelitemi}{-}
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelenumi}{(\roman{*})}
+
+% new page section
+%\let\stdsection\section
+%\renewcommand\section{\newpage\stdsection}
+
+% new page subsection
+%\let\stdsubsection\subsection
+%\renewcommand\subsection{\newpage\stdsubsection}
+
+%%%%%%%%%%%%%%%%%%%%
+% \mathbb commands
+%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
+%%%%%%%%%%%%%%%%%%%%
+% Complex Numbers
+%%%%%%%%%%%%%%%%%%%%
+
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\Imag}{Im}
+
+%%%%%%%%%%%%%%%%%%%%
+% Probability Operators
+%%%%%%%%%%%%%%%%%%%%
+
+\DeclareMathOperator{\Bernoulli}{Bernoulli}
+\DeclareMathOperator{\betaD}{Beta}
+\DeclareMathOperator{\bias}{\textsf{bias}}
+\DeclareMathOperator{\binomial}{Binomial}
+\DeclareMathOperator{\corr}{Corr}
+\DeclareMathOperator{\cov}{\textsf{Cov}}
+\DeclareMathOperator{\Exp}{Exp}
+\DeclareMathOperator{\gammaD}{Gamma}
+\DeclareMathOperator{\mse}{\textsf{MSE}}
+\DeclareMathOperator{\multinomial}{Multinomial}
+\DeclareMathOperator{\Poisson}{Poisson}
+\DeclareMathOperator{\sd}{sd}
+\DeclareMathOperator{\se}{\textsf{se}}
+\DeclareMathOperator{\Uniform}{Uniform}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\var}{\mathbb{V}}
+\newcommand{\E}{\mathbb{E}}
+
+%%%%%%%%%%%%%%%%%%%%
+% TCOLORBOX CODE FROM SeniorMars
+%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage[varbb]{newpxmath} changes math font to newpxmath
+\usepackage{xfrac}
+\usepackage[makeroom]{cancel}
+\usepackage{mathtools}
+\usepackage{bookmark}
+\usepackage{enumitem}
+\usepackage{hyperref,theoremref}
+\hypersetup{
+	pdftitle={Assignment},
+	colorlinks=true, linkcolor=doc!90,
+	bookmarksnumbered=true,
+	bookmarksopen=true
+}
+\usepackage[most,many,breakable]{tcolorbox}
+\usepackage{xcolor}
+\usepackage{varwidth}
+\usepackage{varwidth}
+\usepackage{etoolbox}
+%\usepackage{authblk}
+\usepackage{nameref}
+\usepackage{multicol,array}
+\usepackage{tikz-cd}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi)
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
+
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+
+\usepackage{tikzsymbols}
+
+% colors -- change them as you may!
+
+\definecolor{myg}{RGB}{56, 140, 70}
+\definecolor{myb}{RGB}{45, 111, 177}
+\definecolor{myr}{RGB}{199, 68, 64}
+\definecolor{mytheorembg}{HTML}{F2F2F9}
+\definecolor{mytheoremfr}{HTML}{00007B}
+\definecolor{mylenmabg}{HTML}{FFFAF8}
+\definecolor{mylenmafr}{HTML}{983b0f}
+\definecolor{mypropbg}{HTML}{f2fbfc}
+\definecolor{mypropfr}{HTML}{191971}
+\definecolor{myexamplebg}{HTML}{F2FBF8}
+\definecolor{myexamplefr}{HTML}{88D6D1}
+\definecolor{myexampleti}{HTML}{2A7F7F}
+\definecolor{mydefinitbg}{HTML}{E5E5FF}
+\definecolor{mydefinitfr}{HTML}{3F3FA3}
+\definecolor{notesgreen}{RGB}{0,162,0}
+\definecolor{myp}{RGB}{197, 92, 212}
+\definecolor{mygr}{HTML}{880808}
+\definecolor{myred}{RGB}{127,0,0}
+\definecolor{myyellow}{RGB}{169,121,69}
+\definecolor{myexercisebg}{HTML}{F2FBF8}
+\definecolor{myexercisefg}{HTML}{88D6D1}
+\definecolor{doc}{RGB}{0,0,255}
+\definecolor{subsect}{RGB}{255,0,0}
+\definecolor{question}{HTML}{3FB69E}
+
+%================================
+% THEOREM BOX
+%================================
+
+%\providecommand\theoremnumber{}
+\tcbuselibrary{theorems,skins,hooks}
+\newtcbtheorem{Theorem}{Theorem}
+{%
+	enhanced,
+	breakable,
+	colback = mytheorembg,
+	frame hidden,
+	boxrule = 0sp,
+	borderline west = {2pt}{0pt}{mytheoremfr},
+	sharp corners,
+	detach title,
+	before upper = \tcbtitle\par\smallskip,
+	coltitle = mytheoremfr,
+	fonttitle = \bfseries\sffamily,
+	description font = \mdseries,
+	separator sign none,
+	segmentation style={solid, mytheoremfr},
+}
+{th}
+
+
+%================================
+% Question BOX
+%================================
+
+\makeatletter
+\newtcbtheorem{question}{Question}{enhanced,
+	breakable,
+	colback=white,
+	colframe=question,
+	attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+	fonttitle=\bfseries\sffamily,
+	title={#2},
+	boxed title size=title,
+	boxed title style={%
+			sharp corners,
+			rounded corners=northwest,
+			colback=tcbcolframe,
+			boxrule=0pt,
+		},
+	underlay boxed title={%
+			\path[fill=tcbcolframe] (title.south west)--(title.south east)
+			to[out=0, in=180] ([xshift=5mm]title.east)--
+			(title.center-|frame.east)
+			[rounded corners=\kvtcb@arc] |-
+			(frame.north) -| cycle;
+		},
+	#1
+}{def}
+\makeatother
+
+%================================
+% PROPERTIES BOX
+%================================
+
+\tcbuselibrary{theorems,skins,hooks}
+\newtcbtheorem{Property}{Property}
+{%
+	enhanced,
+	breakable,
+	colback = mytheorembg,
+	frame hidden,
+	boxrule = 0sp,
+	borderline west = {2pt}{0pt}{mytheoremfr},
+	sharp corners,
+	detach title,
+	before upper = \tcbtitle\par\smallskip,
+	coltitle = mytheoremfr,
+	fonttitle = \bfseries\sffamily,
+	description font = \mdseries,
+	separator sign none,
+	segmentation style={solid, mytheoremfr},
+}
+{th}
+
+%================================
+% LEMMA
+%================================
+
+\tcbuselibrary{theorems,skins,hooks}
+\newtcbtheorem[number within=section]{Lemma}{Lemma}
+{%
+	enhanced,
+	breakable,
+	colback = mylenmabg,
+	frame hidden,
+	boxrule = 0sp,
+	borderline west = {2pt}{0pt}{mylenmafr},
+	sharp corners,
+	detach title,
+	before upper = \tcbtitle\par\smallskip,
+	coltitle = mylenmafr,
+	fonttitle = \bfseries\sffamily,
+	description font = \mdseries,
+	separator sign none,
+	segmentation style={solid, mylenmafr},
+}
+{th}
+
+
+% Commands for special boxes
+\newcommand{\thm}[2]{\begin{Theorem*}{#1}{}#2\end{Theorem*}}
+\newcommand{\qs}[2]{\begin{question*}{#1}{}#2\end{question*}}
+\newcommand{\prp}[2]{\begin{Property*}{#1}{}#2\end{Property*}}
+\newcommand{\lemma}[2]{\begin{Lemma*}{#1}{}#2\end{Lemma*}}
+
