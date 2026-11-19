@@ -38,8 +38,10 @@ matching folder of the LaTeX repository in WSL:
     Documents\\physics\\<book>\\chapN\\x.pdf  ->  ~/physics/<book>/chapN/x.pdf
 
 latex-watch notices the new figure there and rebuilds the chapter and the
-merged manual.  The same file lives in Documents\\math; it picks ~/math or
-~/physics from the name of the folder it sits in.
+merged manual.  The folder layout is identical on both sides -- no renames or remapping --
+so a manual's \\includegraphics path is the notebook's own folder.  The same
+file lives in Documents\\math; it picks ~/math or ~/physics from the name of
+the folder it sits in.
 """
 
 import shutil
@@ -130,32 +132,14 @@ def animation_style(colors=None):
         yield t
 
 
-# Where the Windows tree does not mirror the Linux one 1:1: Windows prefix ->
-# Linux prefix, relative to Documents\<root> and ~/<root>, '/'-separated.
-PATH_MAP = {
-    'ladata/parti': 'ladata',                    # Documents\math\ladata\parti\i1 -> ~/math/ladata/i1
-    'fluidmechanics/chap3': 'fluidmechanics/chap3-code',
-    'fluidmechanics/chap12': 'fluidmechanics/chap12-code',
-}
-
-
 def linux_dir(local_dir=None):
     """The WSL folder mirroring local_dir (default: the notebook's folder)."""
     local_dir = Path(local_dir or Path.cwd()).resolve()
-    rel = local_dir.relative_to(_HERE).as_posix()    # <book>/chapN
-    for win, lin in PATH_MAP.items():
-        if rel.lower() == win or rel.lower().startswith(win + '/'):    # Windows ignores case
-            rel = lin + rel[len(win):]
-            break
-    return _LINUX_ROOT / rel
+    return _LINUX_ROOT / local_dir.relative_to(_HERE)    # <book>/chapN, same on both sides
 
 
-def _mirror(local, linux_name=None):
-    """Copy `local` into the WSL repo.  Warns and skips rather than failing.
-
-    linux_name, if given, is the name (or sub-path, '/'-separated) to use
-    inside the mirrored folder, for figures the manual knows by another name.
-    """
+def _mirror(local):
+    """Copy `local` into the WSL repo.  Warns and skips rather than failing."""
     try:
         target_dir = linux_dir(local.parent)
     except ValueError:
@@ -165,7 +149,7 @@ def _mirror(local, linux_name=None):
         if not target_dir.parent.is_dir():
             warnings.warn(f"No book folder {target_dir.parent} in WSL; not copied.")
             return
-        target = target_dir / (linux_name or local.name)
+        target = target_dir / local.name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(local, target)
     except OSError as e:
@@ -174,25 +158,24 @@ def _mirror(local, linux_name=None):
     print(f"saved {local.name} -> {target}")
 
 
-def savefig(fig, name, mirror=True, linux_name=None, **kwargs):
+def savefig(fig, name, mirror=True, **kwargs):
     """Save fig as `name` next to the notebook, then copy it into the WSL repo.
 
     The format comes from the extension.  Extra keyword arguments go to
     fig.savefig.  The local save always happens; the copy is skipped, with a
     warning, if the notebook is outside this folder, the book has no folder in
     WSL, or WSL cannot be reached.  mirror=False skips the copy (for figures
-    the manual does not use); linux_name renames it on the Linux side.
+    the manual does not use).
     """
     kwargs.setdefault('bbox_inches', 'tight')
     local = Path(name).resolve()
     fig.savefig(local, **kwargs)
     if mirror:
-        _mirror(local, linux_name)
+        _mirror(local)
     return local
 
 
-def saveanim(anim, name, fps=30, dpi=150, crf=18, mirror=True, linux_name=None,
-             **kwargs):
+def saveanim(anim, name, fps=30, dpi=150, crf=18, mirror=True, **kwargs):
     """Save a matplotlib animation; MP4 (H.264) by default, .gif if asked.
 
     A name without an extension gets .mp4.  crf is x264 quality (lower is
@@ -221,5 +204,5 @@ def saveanim(anim, name, fps=30, dpi=150, crf=18, mirror=True, linux_name=None,
     kwargs.setdefault('savefig_kwargs', {'facecolor': fig.get_facecolor()})
     anim.save(local, writer=writer, dpi=dpi, **kwargs)
     if mirror:
-        _mirror(local, linux_name)
+        _mirror(local)
     return local
